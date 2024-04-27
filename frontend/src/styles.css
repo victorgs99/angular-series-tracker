@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+@import url(font-awesome-4.7.0/css/font-awesome.min.css);
+
+body{
+    background-color: #FFFFFF;
+    background-image: url(assets/buried.png);
+}
+
+.bgMain{
+    background-color: #007EA7;
+    background-image: url(assets/cardboard.png);
+}
+
+.bgHeader{
+    border-color: #2b2b2b !important;
+    background-color: #00A7E1;
+    background-image: url(assets/cardboard-flat.png);
+}
+
+.bgBarraLateral{
+    border-color: #2b2b2b !important;
+    background-color: #003459;
+    background-image: url(assets/cardboard-flat.png);
+}
+
+.bgMainAcercaDe{
+    background-color: #FFF;
+    background-image: url(assets/notebook-dark.png);
+}
+

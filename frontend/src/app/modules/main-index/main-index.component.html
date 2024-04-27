@@ -1,0 +1,96 @@
+<main class="d-flex flex-row rounded-bottom">
+    <div class="col-9 d-flex flex-column row-gap-5 align-items-center py-4 bgMain">
+      <div class="" style="width: 90%;">
+        <div id="toggleButtonPV" class="d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0 fs-4 fw-bold border border-3 rounded-top icon-link icon-link-hover _toggleButton _borderColor" style="background-color: #FFBF00;">
+          <i class="fa fa-clock-o ms-3 bi" aria-hidden="true"></i>
+          <span class="ms-2">Por ver</span>
+        </div>
+        <div id="cardContainerPV" class="row row-gap-3 column-gap-3 d-flex justify-content-center w-100 m-0 p-0 py-2 border border-3 _bgBodyContainer">
+          <div class="card _serieCard" *ngFor="let serie of seriesPorVer">
+            <img src="{{serie.url_imagen}}" class="mx-auto mt-2 card-img-top" alt="Portada de la serie">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title text-center">{{serie.titulo}}</h5>
+              <p class="card-text">{{serie.sinopsis}}</p>
+              <a class="btn btn-warning stretched-link" [routerLink]="['/bitacoraserie', serie._id]">Ver bitácora</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="" style="width: 90%;">
+        <div id="toggleButtonVA" class="d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0 fs-4 fw-bold border border-3 rounded-top icon-link icon-link-hover _toggleButton _borderColor" style="background-color: #A2E3C4;">
+          <i class="fa fa-clock-o ms-3 bi" aria-hidden="true"></i>
+          <span class="ms-2">Viendo actualmente</span>
+        </div>
+        <div id="cardContainerVA" class="row row-gap-3 column-gap-3 d-flex justify-content-center w-100 m-0 p-0 py-2 border border-3 _bgBodyContainer">
+          <div class="card _serieCard" *ngFor="let serie of seriesViendoActualmente">
+            <img src="{{serie.url_imagen}}" class="mx-auto mt-2 card-img-top" alt="Portada de la serie">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title text-center">{{serie.titulo}}</h5>
+              <p class="card-text">{{serie.sinopsis}}</p>
+              <a class="btn btn-success stretched-link" [routerLink]="['/bitacoraserie', serie._id]">Ver bitácora</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="" style="width: 90%;">
+        <div id="toggleButtonF" class="d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0 fs-4 fw-bold border border-3 rounded-top icon-link icon-link-hover _toggleButton _borderColor" style="background-color: #D64550;">
+          <i class="fa fa-clock-o ms-3 bi" aria-hidden="true"></i>
+          <span class="ms-2">Finalizados</span>
+        </div>
+        <div id="cardContainerF" class="row row-gap-3 column-gap-3 d-flex justify-content-center w-100 m-0 p-0 py-2 border border-3 _bgBodyContainer">
+          <div class="card _serieCard" *ngFor="let serie of seriesFinalizados">
+            <img src="{{serie.url_imagen}}" class="mx-auto mt-2 card-img-top" alt="Portada de la serie">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title text-center">{{serie.titulo}}</h5>
+              <p class="card-text">{{serie.sinopsis}}</p>
+              <a class="btn btn-danger stretched-link" [routerLink]="['/bitacoraserie', serie._id]">Ver bitácora</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-3 d-flex flex-column align-items-center justify-content-start pt-4 border-start border-3 bgBarraLateral">
+      <button type="button" class="btn btn-addButton d-flex flex-column align-items-center icon-link icon-link-hover py-4" data-bs-toggle="modal" data-bs-target="#modalAdd">
+        <i class="fa fa-plus-square-o bi fs-1" aria-hidden="true"></i>
+        <span class="fs-4">Agregar serie</span>
+      </button>
+    </div>
+
+    <!--Modal-->
+    <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 fw-bold" id="modalAddLabel">Agregar serie</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="addSerieForm" (ngSubmit)="agregarSerie()">
+              <div class="mb-3">
+                  <label class="form-label fw-semibold" for="inputTitulo">Título</label>
+                  <input class="form-control" type="text" id="inputTitulo" formControlName="titulo">
+              </div>
+              <div class="mb-3">
+                  <label class="form-label fw-semibold" for="inputSinopsis">Sinopsis</label>
+                  <textarea class="form-control" id="inputSinopsis" rows="3" formControlName="sinopsis"></textarea>
+              </div>
+              <div class="mb-4 d-flex flex-row justify-content-between">
+                <div>
+                  <label class="form-label fw-semibold" for="inputCapitulos">Número de capítulos</label>
+                  <input class="form-control" type="number" id="inputCapitulos" min="1" max="200" formControlName="numero_episodios">
+                </div>
+                <div>
+                  <label class="form-label fw-semibold" for="inputImg">URL de la imagen</label>
+                  <input class="form-control" type="text" id="inputImg" formControlName="url_imagen">
+                </div>
+              </div>
+              <div class="mb-2 d-flex flex-row column-gap-3 justify-content-end">
+                <button id="btnModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" [disabled]="addSerieForm.invalid" class="btn btn-primary">Agregar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>

@@ -1,0 +1,147 @@
+<main class="d-flex justify-content-center rounded-bottom py-3 bgMainAcercaDe">
+    <div style="width: 70%;">
+        <div class="d-flex flex-row justify-content-around w-100 pt-2">
+            <div class="d-flex flex-column" style="width: 40%;">
+                <img src="{{serie.url_imagen}}" alt="Portada de la serie">
+            </div>
+            <div class="d-flex flex-column justify-content-between align-items-center" style="width: 40%;">
+                <div class="d-flex flex-column">
+                    <h3>{{serie.titulo}}</h3>
+                    <span style="text-align: justify;">{{serie.sinopsis}}</span>
+                    <span *ngIf="serie.episodios && serie.episodios.length <= 0" class="text-end">Estado: Por ver</span>
+                    <span *ngIf="serie.episodios && (serie.episodios.length > 0 && serie.episodios.length !== serie.numero_episodios)" class="text-end">Estado: Viendo actualmente</span>
+                    <span *ngIf="serie.episodios && serie.episodios.length === serie.numero_episodios" class="text-end">Estado: Finalizado</span>
+                </div>
+                <div class="d-flex column-gap-3">
+                    <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#modificaSerieModal">Modificar</button>
+                    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#eliminaSerieModal">Eliminar</button>
+                </div>
+            </div>
+        </div>
+        <div class="w-100">
+            <div class="mt-5 mb-3">
+                <h1 class="text-center">Historial de episodios vistos</h1>
+                <hr class="border border-2 opacity-75" style="border-color: #007EA7 !important;">
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="text-center">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Episodio</th>
+                        <th scope="col">Fecha de visualización</th>
+                        <th scope="col">Opciones</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-center">
+                      <tr *ngFor="let episodio of serie.episodios">
+                        <th scope="row">{{episodio.numero_episodio}}</th>
+                        <td>{{episodio.titulo_episodio}}</td>
+                        <td>{{episodio.fecha_vista}}</td>
+                        <td class="">
+                          <button class="btn btn-danger icon-link icon-link-hover" type="button" (click)="eliminarEpisodio(episodio._id!)"><i class="fa fa-trash me-1 bi" aria-hidden="true"></i><span>Eliminar</span></button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-center" colspan="4">
+                          <button *ngIf="serie.episodios && serie.episodios.length !== serie.numero_episodios" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#agregaEpModal">Agregar nuevo registro de episodio</button>
+                          <button *ngIf="serie.episodios && serie.episodios.length == serie.numero_episodios" class="btn btn-success" type="button" disabled>¡Serie finalizada con un total de {{serie.numero_episodios}} episodios!</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal modifica serie-->
+    <div class="modal fade" id="modificaSerieModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 fw-bold" id="modalLabel">Editar serie</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="modifySerieForm" (ngSubmit)="modificaSerie()">
+              <div class="mb-3">
+                  <label class="form-label fw-semibold" for="inputTitulo">Título</label>
+                  <input class="form-control" type="text" id="inputTitulo" formControlName="titulo">
+              </div>
+              <div class="mb-3">
+                  <label class="form-label fw-semibold" for="inputSinopsis">Sinopsis</label>
+                  <textarea class="form-control" id="inputSinopsis" rows="3" formControlName="sinopsis"></textarea>
+              </div>
+              <div class="mb-4 d-flex flex-row justify-content-between">
+                <div>
+                  <label class="form-label fw-semibold" for="inputCapitulos">Número de capítulos</label>
+                  <input class="form-control" type="number" id="inputCapitulos" min="1" max="200" formControlName="numero_episodios">
+                </div>
+                <div>
+                  <label class="form-label fw-semibold" for="inputImg">URL de la imagen</label>
+                  <input class="form-control" type="text" id="inputImg" formControlName="url_imagen">
+                </div>
+              </div>
+              <div class="mb-2 d-flex flex-row column-gap-3 justify-content-end">
+                <button id="btnModSerieModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-warning">Modificar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Modal elimina serie-->
+    <div class="modal fade" id="eliminaSerieModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 fw-bold" id="modalLabel">Eliminar serie</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <span>¿Está seguro de que desea eliminar <b>"{{serie.titulo}}"</b>?<br><br>La bitácora de la serie será eliminada definitivamente y no podrá recuperarse.</span>
+          </div>
+          <div class="modal-footer">
+            <button id="btnElimSerieModalClose" type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>
+            <button (click)="eliminaSerie()" class="btn btn-danger">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Modal agrega episodio-->
+    <div class="modal fade" id="agregaEpModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 fw-bold" id="modalLabel">Agregar episodio</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="addEpisodioForm" (ngSubmit)="agregaEpisodio()">
+              <div class="mb-3 d-flex flex-row justify-content-between">
+                <div>
+                  <label class="form-label fw-semibold" for="inputNumEpisodio">Número de episodio</label>
+                  <input class="form-control" type="number" id="inputNumEpisodio" min="1" max="200" formControlName="numero_episodio">
+                </div>
+                <div>
+                  <label class="form-label fw-semibold" for="inputFechaVista">Fecha de visualización</label>
+                  <input class="form-control" type="date" id="inputFechaVista" formControlName="fecha_vista">
+                </div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label fw-semibold" for="inputTitulo">Título</label>
+                <input class="form-control" type="text" id="inputTitulo" formControlName="titulo_episodio">
+              </div>
+              <div class="mb-2 d-flex flex-row column-gap-3 justify-content-end">
+                <button id="btnAgEpModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" [disabled]="addEpisodioForm.invalid" class="btn btn-primary">Agregar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>
